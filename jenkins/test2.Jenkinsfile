@@ -17,7 +17,6 @@ node() {
     def SENDER = jsonBuilder("$payload.sender.login" )
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     stage('更新代码') {
-
         def scm 
         retry(3) {
             scm = checkout([$class: 'GitSCM', branches: [[name: "${BUILD_BRANCH}".substring(1, "${BUILD_BRANCH}".length() - 1)]], userRemoteConfigs: [[credentialsId: '6ada9c6d-d42f-4ace-bb96-5bb7cb392ad9', url: "${GIT_URL}".substring(1, "${GIT_URL}".length() - 1)]]])
