@@ -25,7 +25,7 @@ node() {
         currentBuild.displayName = "${REPOSITORY_NAME}"
         currentBuild.description = "构建分支: ${scm.GIT_BRANCH}     合并人: ${SENDER}      提交人: ${PUSHER}"
         SHORTCOMMIT = scm.GIT_COMMIT.substring(0, 10)
-        currentBuild.description = currentBuild.description + "     差异对比: [${SHORTCOMMIT}](${COMPARE_URL})
+        currentBuild.description = currentBuild.description + "     差异对比: [${SHORTCOMMIT}](${COMPARE_URL})"
     }
     stage('通知检测') {
       // sh 'curl -q -X POST "http://webhook.internal.wsmhz.com/api/notify?GROUP_NAME=${GROUP_NAME}&PROJECT_NAME=${PROJECT_NAME}&BUILD_URL=${BUILD_URL}&JOB_URL=${JOB_URL}"'
