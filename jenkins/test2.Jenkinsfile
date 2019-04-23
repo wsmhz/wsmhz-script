@@ -8,12 +8,12 @@ pipeline {
     agent any
     environment {
         payload = jsonParse("$payload")
-    }
+       
     stages {
         stage('init build params') {
             steps {
-                name= new JsonBuilder("$payload.repository.name" ).toPrettyString()
-                echo "${name}"
+                echo "${payload}"
+               
             }
         }
     }
