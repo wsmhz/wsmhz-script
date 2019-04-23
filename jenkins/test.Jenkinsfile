@@ -1,11 +1,15 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic 
 import groovy.json.JsonBuilder
+@NonCPS
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
 node {
    	echo "start"
 
    	echo "$payload"
 
-    def object =  new JsonSlurper().parseText("$payload")
+    def object =  jsonParse("$payload")
     
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
     echo "${refs}"
