@@ -10,7 +10,7 @@ pipeline {
         payload = jsonParse("$payload")
     }
     stages {
-        stage('init') {
+        stage('init build params') {
             steps {
                 String name= new JsonBuilder("$payload.repository.name" ).toPrettyString()
                 echo "${name}"
