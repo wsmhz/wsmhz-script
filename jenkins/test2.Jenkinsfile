@@ -8,12 +8,11 @@ pipeline {
     agent any
     environment {
         payload = jsonParse("$payload")
-       
+    }
     stages {
         stage('init build params') {
             steps {
                 echo "${payload}"
-               
             }
         }
     }
