@@ -16,7 +16,7 @@ node() {
     stage('更新代码') {
 
         
-        sh label: '', script: 'git clone ${GIT_URL}'
+        sh label: '', script: 'git clone "${GIT_URL}"'
 
         
         echo "${GIT_URL}"
