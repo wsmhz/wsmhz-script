@@ -27,5 +27,6 @@ node() {
         SHORTCOMMIT = scm.GIT_COMMIT.substring(0, 10)
         currentBuild.description = currentBuild.description + "<br>差异对比: [${SHORTCOMMIT}](${COMPARE_URL})"
         
+        
     }
 }
