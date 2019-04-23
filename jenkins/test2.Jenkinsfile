@@ -35,8 +35,6 @@ node() {
         //   -d '{"msgtype":"markdown","markdown":{"title": "项目构建完成","text":"- '"项目 [${PROJECT_NAME}](${JOB_URL}) 自动构建 [#${BUILD_NUMBER}](${BUILD_URL})"' 已完成"}}'
     }
     stage('构建项目') {
-      withMaven(maven: 'Maven') {
-        sh "mvn clean -Dmaven.test.skip=true deploy"
-      }
+        sh "mvn clean -Dmaven.test.skip=true install"
     }
 }
