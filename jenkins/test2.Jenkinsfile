@@ -12,9 +12,13 @@ node() {
     def shortCommit;
     def payload = jsonParse("$payload")
     def repositoryName= jsonBuilder("$payload.repository.name")
+    def GIT_URL = jsonBuilder("$payload.repository.clone_url" )
     stage('更新代码') {
-
-      echo "${payload}"
+        def scm
+        retry(3) {
+            scm = checkout([$class: 'GitSCM', branches: [[name: '${GIT_BRANCH}']], userRemoteConfigs: [[url: '${GIT_URL}']]])
+        }
+        echo "${payload}"
         echo "${repositoryName}"
     }
 }
