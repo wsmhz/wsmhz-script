@@ -1,30 +1,11 @@
-import groovy.json.JsonSlurperClassic 
-import groovy.json.JsonBuilder
-@NonCPS
-def jsonParse(def json) {
-    new groovy.json.JsonSlurperClassic().parseText(json)
-}
-@NonCPS
-def jsonBuilder(def json) {
-    new JsonBuilder(json).toPrettyString()
-}
-pipeline {
-    agent any
-    environment {
-        payload = jsonParse("$payload")
-        repositoryName= jsonBuilder("$payload.repository.name" )
-    }
-    stages {
-        stage('更新代码') {
-            steps {
-                echo "${payload}"
-                echo "*********"
-                echo "${repositoryName}"
-                echo "*********"
-                echo "${GIT_BRANCH}"
-                echo "*********"
-                echo "${GIT_URL}"
-            }
-        }
+node() {
+    def shortCommit;
+    stage('更新代码') {
+      def scm
+      retry(3) {
+        scm = checkout([$class: 'GitSCM', branches: [[name: '${GIT_BRANCH}']], userRemoteConfigs: [[url: '${GIT_URL}']]])
+      }
+      echo "${GIT_URL}"
+      echo "${GIT_BRANCH}"
     }
 }
