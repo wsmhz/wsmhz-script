@@ -11,14 +11,20 @@ def jsonBuilder(def json) {
 pipeline {
     agent any
     environment {
-        name= jsonBuilder("$payload.repository.name" )
+        payload = jsonParse("$payload")
+        repositoryName= jsonBuilder("$payload.repository.name" )
     }
     stages {
-        stage('init build params') {
+        def shortCommit
+        stage('更新代码') {
             steps {
-
+                echo "${payload}"
                 echo "*********"
                 echo "${name}"
+                echo "*********"
+                echo "${GIT_BRANCH}"
+                echo "*********"
+                echo "${GIT_URL}"
             }
         }
     }
