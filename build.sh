@@ -17,3 +17,4 @@ EOF
 scp target/${JOB_NAME}.jar root@192.168.2.209:/home/app/erp
 ssh -t root@192.168.2.209 "/home/app/kill.sh ${JOB_NAME}"
 #curl -q "http://ci.internal.sixi.com/job/RemoteKillService/buildWithParameters?token=88888888&PROJECT_NAME=${JOB_NAME}&REMOTE_SERVER=192.168.2.209"
+
