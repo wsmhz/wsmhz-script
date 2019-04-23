@@ -16,6 +16,7 @@ node() {
     def BUILD_BRANCH = jsonBuilder("$payload.repository.default_branch" )
     def SENDER = jsonBuilder("$payload.sender.login" )
     def PUSHER = jsonBuilder("$payload.pusher.name" )
+    def COMPARE_URL = jsonBuilder("$payload.compare" )
     stage('更新代码') {
         def scm 
         retry(3) {
