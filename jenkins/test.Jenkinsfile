@@ -9,6 +9,8 @@ node {
 
    	echo "$payload"
 
+
+
     def object =  jsonParse("$payload")
     
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
