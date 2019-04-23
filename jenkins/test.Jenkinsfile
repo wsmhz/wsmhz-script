@@ -3,6 +3,8 @@ import groovy.json.JsonBuilder
 node {
    	echo "start"
 
+   	echo "$payload"
+
     def object =  new JsonSlurper().parseText("$payload")
     
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
