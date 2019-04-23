@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('init build params') {
             steps {
-                String name= new JsonBuilder("$payload.repository.name" ).toPrettyString()
+                name= new JsonBuilder("$payload.repository.name" ).toPrettyString()
                 echo "${name}"
             }
         }
