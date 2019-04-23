@@ -9,6 +9,7 @@ def jsonBuilder(def json) {
     new JsonBuilder(json).toPrettyString()
 }
 node() {
+    def rtMaven = Artifactory.newMavenBuild()
     def SHORTCOMMIT;
     def payload = jsonParse("$payload")
     def REPOSITORY_NAME= jsonBuilder("$payload.repository.name")
@@ -18,6 +19,7 @@ node() {
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     def COMPARE_URL = jsonBuilder("$payload.compare" )
     stage('更新代码') {
+        sh "source /etc/profile"
         def scm 
         retry(3) {
             scm = checkout([$class: 'GitSCM', branches: [[name: "${BUILD_BRANCH}".substring(1, "${BUILD_BRANCH}".length() - 1)]], userRemoteConfigs: [[credentialsId: '6ada9c6d-d42f-4ace-bb96-5bb7cb392ad9', url: "${GIT_URL}".substring(1, "${GIT_URL}".length() - 1)]]])
