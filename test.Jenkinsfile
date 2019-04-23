@@ -7,8 +7,7 @@ node {
     
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
     echo "${refs}"
-    
-
+   
     
     echo "end"
 }
