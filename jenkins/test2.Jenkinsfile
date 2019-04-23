@@ -14,8 +14,9 @@ node() {
     def repositoryName= jsonBuilder("$payload.repository.name")
     def GIT_URL = jsonBuilder("$payload.repository.clone_url" )
     stage('更新代码') {
-        def scm
-    scm=checkout([$class:'GitSCM',branches:[[name:'master']],userRemoteConfigs:[[url:"${GIT_URL}"]]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '58cbfd73-842b-4da8-9464-36abc844bf7f', url: "${GIT_URL}"]]])
+
+        
         echo "${GIT_URL}"
         echo "${repositoryName}"
     }
