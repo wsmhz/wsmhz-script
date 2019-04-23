@@ -4,7 +4,7 @@ node {
    	echo "start"
 
 
-    def object =  new JsonSlurper().parseText("$payload")
+    def object =  new JsonSlurper().parseText("$Payload")
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
     echo "${refs}"
     echo "end"
