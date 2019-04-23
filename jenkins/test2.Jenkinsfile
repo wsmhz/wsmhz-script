@@ -11,10 +11,10 @@ def jsonBuilder(def json) {
 node() {
     def shortCommit;
     def payload = jsonParse("$payload")
-
+    def repositoryName= jsonBuilder("$payload.repository.name")
     stage('更新代码') {
 
       echo "${payload}"
-
+        echo "${repositoryName}"
     }
 }
