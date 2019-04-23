@@ -15,10 +15,9 @@ node() {
     def GIT_URL = jsonBuilder("$payload.repository.clone_url" )
     stage('更新代码') {
 
-        git clone ${GIT_URL}
-        cd ${GIT_URL}
-        pwd
-        giut checkout master
+        
+        sh label: '', script: 'git clone ${GIT_URL}'
+
         
         echo "${GIT_URL}"
         echo "${repositoryName}"
