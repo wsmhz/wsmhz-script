@@ -2,7 +2,7 @@
 node {
    	echo "start"
 
-   	echo "${payload}"
+   	echo "the build worked! The payload is $payload"
 
     echo "end"
 }
