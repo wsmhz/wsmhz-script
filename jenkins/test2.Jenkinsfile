@@ -26,7 +26,11 @@ node() {
         currentBuild.description = "构建分支: ${scm.GIT_BRANCH}<br>合并人: ${SENDER}<br>提交人: ${PUSHER}"
         SHORTCOMMIT = scm.GIT_COMMIT.substring(0, 10)
         currentBuild.description = currentBuild.description + "<br>差异对比: [${SHORTCOMMIT}](${COMPARE_URL})"
+
         
+
+
+
         
     }
 }
