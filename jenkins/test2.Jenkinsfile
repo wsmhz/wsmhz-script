@@ -16,7 +16,7 @@ node() {
     stage('更新代码') {
        
         echo "${GIT_URL}"
-        echo "${GIT_URL}".substring(1, "${GIT_URL}".length())
+        echo "${GIT_URL}".substring(1, "${GIT_URL}".length() - 1)
         echo "${repositoryName}"
     }
 }
