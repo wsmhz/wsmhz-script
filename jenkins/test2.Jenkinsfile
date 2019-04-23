@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo "${payload}"
                 echo "*********"
-                echo "${name}"
+                echo "${repositoryName}"
                 echo "*********"
                 echo "${GIT_BRANCH}"
                 echo "*********"
