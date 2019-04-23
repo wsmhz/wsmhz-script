@@ -2,7 +2,8 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonBuilder
 node {
     
-   echo "start"
+    
+   	echo "start"
 
     def object =  new JsonSlurper().parseText("$Payload")
     
