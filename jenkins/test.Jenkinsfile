@@ -8,15 +8,18 @@ node {
    	echo "start"
 
    	echo "$payload"
+    echo "****************"
     def object =  jsonParse("$payload")
-    
+
     String refs= new JsonBuilder("$object.ref" ).toPrettyString()
     echo "${refs}"
+    echo "****************"
     String repository= new JsonBuilder("$object.repository" ).toPrettyString()
     echo "${repository}"
+    echo "****************"
     String name= new JsonBuilder("$object.repository.name" ).toPrettyString()
     echo "${name}"
-
+	echo "****************"
     
     echo "end"
 }
