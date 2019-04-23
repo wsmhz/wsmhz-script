@@ -11,13 +11,12 @@ def jsonBuilder(def json) {
 pipeline {
     agent any
     environment {
-        payload = jsonParse("$payload")
         name= jsonBuilder("$payload.repository.name" )
     }
     stages {
         stage('init build params') {
             steps {
-                echo "${payload}"
+
                 echo "*********"
                 echo "${name}"
             }
