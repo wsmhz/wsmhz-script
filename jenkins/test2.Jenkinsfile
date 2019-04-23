@@ -15,7 +15,6 @@ pipeline {
         repositoryName= jsonBuilder("$payload.repository.name" )
     }
     stages {
-        def shortCommit
         stage('更新代码') {
             steps {
                 echo "${payload}"
