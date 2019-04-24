@@ -9,8 +9,8 @@ def jsonBuilder(def json) {
     new JsonBuilder(json).toPrettyString()
 }
 node() {
-    def rtMaven = Artifactory.newMavenBuild()
-    def SHORTCOMMIT;
+    def mvnHome = tool 'maven3.0.5'
+    def SHORTCOMMIT
     def payload = jsonParse("$payload")
     def REPOSITORY_NAME= jsonBuilder("$payload.repository.name")
     def GIT_URL = jsonBuilder("$payload.repository.clone_url" )
@@ -37,6 +37,6 @@ node() {
         //   -d '{"msgtype":"markdown","markdown":{"title": "项目构建完成","text":"- '"项目 [${PROJECT_NAME}](${JOB_URL}) 自动构建 [#${BUILD_NUMBER}](${BUILD_URL})"' 已完成"}}'
     }
     stage('构建项目') {
-       sh label: '', script: 'mvn clean -Dmaven.test.skip=true install'
+       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
     }
 }
