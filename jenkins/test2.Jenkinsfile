@@ -46,4 +46,7 @@ node() {
 
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME}"
     }
+    stage('清理工作空间') {
+      cleanWs()
+    }
 }
