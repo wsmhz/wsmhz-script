@@ -46,7 +46,7 @@ node() {
     stage('构建镜像') {
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
-        sh "docker images | grep wsmhz-eureka| awk '{print $3}' |xargs docker rmi"
+        sh "docker images | grep wsmhz-eureka| awk '{print\$3}' |xargs docker rmi"
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
     }
     stage('清理工作空间') {
