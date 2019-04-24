@@ -6,7 +6,8 @@ def jsonParse(def json) {
 }
 @NonCPS
 def jsonBuilder(def json) {
-    new JsonBuilder(json).toPrettyString()
+    String result = new JsonBuilder(json).toPrettyString()
+    $result.substring(1, $result.length() - 1)
 }
 node() {
     def mvnHome = tool 'maven3.0.5'
@@ -22,7 +23,7 @@ node() {
         sh "source /etc/profile"
         def scm 
         retry(3) {
-            scm = checkout([$class: 'GitSCM', branches: [[name: "${BUILD_BRANCH}".substring(1, "${BUILD_BRANCH}".length() - 1)]], userRemoteConfigs: [[credentialsId: '6ada9c6d-d42f-4ace-bb96-5bb7cb392ad9', url: "${GIT_URL}".substring(1, "${GIT_URL}".length() - 1)]]])
+            scm = checkout([$class: 'GitSCM', branches: [[name: "${BUILD_BRANCH}"]], userRemoteConfigs: [[credentialsId: '6ada9c6d-d42f-4ace-bb96-5bb7cb392ad9', url: "${GIT_URL}"]]])
         }
         currentBuild.displayName = "${REPOSITORY_NAME}"
         currentBuild.description = "构建分支: ${scm.GIT_BRANCH}     合并人: ${SENDER}      提交人: ${PUSHER}"
@@ -39,4 +40,13 @@ node() {
     stage('构建项目') {
        sh "'${mvnHome}/bin/mvn' clean -Dmaven.test.skip=true install"
     }
+/*    stage('构建镜像') {
+        sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/docker.sh | bash"
+        sh "echo '输出生成的Dockerfile' && cat Dockerfile"
+
+        sh "docker build -t ${docker_img_name}:${build_tag} " +
+                " --build-arg SPRING_PROFILE=prod " +
+                " --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar " +
+                " ./location/"
+    }*/
 }
