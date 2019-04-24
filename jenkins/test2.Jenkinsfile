@@ -40,13 +40,10 @@ node() {
     stage('构建项目') {
        sh "'${mvnHome}/bin/mvn' clean -Dmaven.test.skip=true install"
     }
-/*    stage('构建镜像') {
+    stage('构建镜像') {
         sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/docker.sh | bash"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
 
-        sh "docker build -t ${docker_img_name}:${build_tag} " +
-                " --build-arg SPRING_PROFILE=prod " +
-                " --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar " +
-                " ./location/"
-    }*/
+        sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME}"
+    }
 }

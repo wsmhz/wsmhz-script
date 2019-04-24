@@ -2,6 +2,8 @@ cat > Dockerfile <<EOF
 FROM java:8
 MAINTAINER com.wsmhz
 
+ARG PROJECT_NAME=*
+
 ADD target/${PROJECT_NAME}.jar /root
 
 WORKDIR /root
