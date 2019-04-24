@@ -41,7 +41,7 @@ node() {
        sh "'${mvnHome}/bin/mvn' clean -Dmaven.test.skip=true install"
     }
     stage('构建镜像') {
-        sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/docker.sh | bash"
+        sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
 
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
