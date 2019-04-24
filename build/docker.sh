@@ -1,5 +1,6 @@
 cat > Dockerfile <<EOF
-FROM docker.i.sixi.com/base/openjdk:8u181
+FROM java:8
+MAINTAINER com.wsmhz
 
 ADD target/${PROJECT_NAME}.jar /root
 
