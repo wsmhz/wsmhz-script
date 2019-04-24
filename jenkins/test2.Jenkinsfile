@@ -7,7 +7,7 @@ def jsonParse(def json) {
 @NonCPS
 def jsonBuilder(def json) {
     String result = new JsonBuilder(json).toPrettyString()
-    $result.substring(1, $result.length() - 1)
+    "${result}".substring(1, "${result}".length() - 1)
 }
 node() {
     def mvnHome = tool 'maven3.0.5'
