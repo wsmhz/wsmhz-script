@@ -19,6 +19,9 @@ node() {
     def SENDER = jsonBuilder("$payload.sender.login" )
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     def COMPARE_URL = jsonBuilder("$payload.compare" )
+    stage('清理工作空间') {
+      cleanWs()
+    }
     stage('更新代码') {
         sh "source /etc/profile"
         def scm 
