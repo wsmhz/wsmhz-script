@@ -44,7 +44,7 @@ node() {
         sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/docker.sh | bash"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
 
-        sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME}"
+        sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
     }
     stage('清理工作空间') {
       cleanWs()
