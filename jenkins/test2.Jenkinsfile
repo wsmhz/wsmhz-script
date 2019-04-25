@@ -46,12 +46,12 @@ node() {
         def result = sh returnStdout: true ,script: "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
         sh "echo ${result}"
         if ("${result}") {
-            sh "echo ********"
+            sh "echo start"
             sh "echo ${result}"
-            sh "echo ********"
-/*            sh "echo 删除旧镜像"
+            sh "echo end"
+            sh "echo 删除旧镜像"
             sh "docker rmi ${result}"
-            sh "echo 删除旧镜像成功"*/
+            sh "echo 删除旧镜像成功"
         }
         
         // sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}' |xargs docker rmi"
