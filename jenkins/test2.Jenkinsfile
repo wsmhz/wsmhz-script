@@ -43,14 +43,12 @@ node() {
     stage('构建镜像') {
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
-        script {
-            def id = sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
-            if(id){
-                sh "echo ${id}"
-                sh "echo 删除旧镜像"
-                sh "docker rmi ${id}"
-                sh "echo 删除旧镜像成功"
-            }
+        def id = sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
+        if ("${id}") {
+            sh "echo ${id}"
+            sh "echo 删除旧镜像"
+            sh "docker rmi ${id}"
+            sh "echo 删除旧镜像成功"
         }
         // sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}' |xargs docker rmi"
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
