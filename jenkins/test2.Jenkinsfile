@@ -46,7 +46,10 @@ node() {
         sh "echo 删除旧镜像"
         script {
             def id = sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
-            sh "echo ${id}"
+            if(id){
+                sh "echo ${id}"
+                sh "docker rmi ${id}"
+            }
         }
         // sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}' |xargs docker rmi"
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
