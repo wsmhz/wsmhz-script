@@ -19,9 +19,6 @@ node() {
     def SENDER = jsonBuilder("$payload.sender.login" )
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     def COMPARE_URL = jsonBuilder("$payload.compare" )
-    stage('清理工作空间') {
-      cleanWs()
-    }
     stage('更新代码') {
         sh "source /etc/profile"
         def scm 
@@ -46,7 +43,8 @@ node() {
     stage('构建镜像') {
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
-        sh "docker images | grep wsmhz-eureka| awk '{print\$3}' |xargs docker rmi"
+        sh "echo 删除旧镜像"
+        sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}' |xargs docker rmi"
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
     }
     stage('清理工作空间') {
