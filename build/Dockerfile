@@ -1,4 +1,4 @@
-FROM java:8
+FROM wsmhz/java8:1.0
 MAINTAINER com.wsmhz
 
 ARG PROJECT_NAME=test
