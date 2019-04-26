@@ -49,9 +49,12 @@ node() {
             sh "docker rmi ${result}"
             sh "echo 删除旧镜像成功"
         }
-        
         // sh "docker images ${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}' |xargs docker rmi"
         sh "docker build -t ${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
+    }
+    stage('推送镜像') {
+        sh "docker tag ${REPOSITORY_NAME}:${BUILD_BRANCH} wsmhz/${REPOSITORY_NAME}:${BUILD_BRANCH}"
+        sh "docker push wsmhz/${REPOSITORY_NAME}:${BUILD_BRANCH}"
     }
     stage('清理工作空间') {
       cleanWs()
