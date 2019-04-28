@@ -13,7 +13,7 @@ node() {
     def mvnHome = tool 'maven3.6.1'
     def javaHome = tool 'jdk1.8'
     env.PATH = "${mvnHome}/bin:${javaHome}/bin:${env.PATH}"
-    
+
     def SHORTCOMMIT
     def payload = jsonParse("$payload")
     def REPOSITORY_NAME= jsonBuilder("$payload.repository.name")
@@ -23,7 +23,6 @@ node() {
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     def COMPARE_URL = jsonBuilder("$payload.compare" )
     stage('更新代码') {
-        sh "source /etc/profile"
         def scm 
         retry(3) {
             scm = checkout([$class: 'GitSCM', branches: [[name: "${BUILD_BRANCH}"]], userRemoteConfigs: [[credentialsId: '6ada9c6d-d42f-4ace-bb96-5bb7cb392ad9', url: "${GIT_URL}"]]])
