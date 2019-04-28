@@ -11,6 +11,9 @@ def jsonBuilder(def json) {
 }
 node() {
     def mvnHome = tool 'maven3.6.1'
+    def javaHome = tool 'jdk1.8'
+    env.PATH = "${mvnHome}/bin:${javaHome}/bin:${env.PATH}"
+    
     def SHORTCOMMIT
     def payload = jsonParse("$payload")
     def REPOSITORY_NAME= jsonBuilder("$payload.repository.name")
@@ -38,7 +41,7 @@ node() {
         //   -d '{"msgtype":"markdown","markdown":{"title": "项目构建完成","text":"- '"项目 [${PROJECT_NAME}](${JOB_URL}) 自动构建 [#${BUILD_NUMBER}](${BUILD_URL})"' 已完成"}}'
     }
     stage('构建项目') {
-       sh "'${mvnHome}/bin/mvn' clean -Dmaven.test.skip=true install"
+       sh "'mvn' clean -Dmaven.test.skip=true install"
     }
     stage('构建镜像') {
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
@@ -58,5 +61,5 @@ node() {
     stage('清理工作空间') {
       cleanWs()
     }
-    
+
 }
