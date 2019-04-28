@@ -58,4 +58,5 @@ node() {
     stage('清理工作空间') {
       cleanWs()
     }
+    
 }
