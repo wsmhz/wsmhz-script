@@ -10,7 +10,7 @@ def jsonBuilder(def json) {
     "${result}".substring(1, "${result}".length() - 1)
 }
 node() {
-    def mvnHome = tool 'maven3.0.5'
+    def mvnHome = tool 'maven3.6.1'
     def SHORTCOMMIT
     def payload = jsonParse("$payload")
     def REPOSITORY_NAME= jsonBuilder("$payload.repository.name")
