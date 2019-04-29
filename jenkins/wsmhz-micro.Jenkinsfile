@@ -46,10 +46,15 @@ node() {
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
         def result = sh returnStdout: true ,script: "docker images docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
-        if ("${result}") {
-            sh "echo 删除旧镜像"
-            sh "docker rmi --force ${result}"
-            sh "echo 删除旧镜像成功"
+        try {
+            if ("${result}") {
+                sh "echo 删除旧镜像"
+                sh "docker rmi --force ${result}"
+                sh "echo 删除旧镜像成功"
+            }
+        }
+        catch(e){
+            sh "echo 删除旧镜像失败，可能是该镜像正在被使用"
         }
         sh "docker build -t docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
     }
