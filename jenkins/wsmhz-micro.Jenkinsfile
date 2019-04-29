@@ -48,7 +48,7 @@ node() {
         def result = sh returnStdout: true ,script: "docker images docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
         if ("${result}") {
             sh "echo 删除旧镜像"
-            sh "docker rmi ${result}"
+            sh "docker rmi --force ${result}"
             sh "echo 删除旧镜像成功"
         }
         sh "docker build -t docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
