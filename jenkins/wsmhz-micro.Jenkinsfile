@@ -43,6 +43,12 @@ node() {
        sh "'mvn' clean -Dmaven.test.skip=true install"
     }
     stage('构建镜像') {
+        try {
+            sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/shell/docker_rmi_none.sh | bash"
+        }
+        catch(e) {
+            sh "echo 删除带<none>的旧镜像失败，可能是该镜像正在被使用"
+        }
         sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
         sh "echo '输出生成的Dockerfile' && cat Dockerfile"
         def result = sh returnStdout: true ,script: "docker images docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
