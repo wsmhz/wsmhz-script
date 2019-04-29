@@ -1,4 +1,4 @@
-FROM wsmhz/java8:1.0
+FROM docker.wsmhz.cn/java8
 MAINTAINER com.wsmhz
 
 ARG PROJECT_NAME
