@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 278428146aeb32b88f963a9def1e0646c99f209c
+# d16264bf0c250ca9bed1f6e4e4b22a4dcfcc215e
 # https://api.github.com/repos/  仓库api
 # https://api.github.com/orgs
 # curl -u "$username:$token" https://api.github.com/user/repos -d '{"name":"'$repo_name'"}' > /dev/null 2>&1   
@@ -37,9 +37,9 @@ username=`git config github.user`
 token=`git config github.token`
 
 # 一些函数
-api_post(){
-    curl -u "$username:$token" "${APIHost}${1:?Empty api path!}" -o/dev/null --data "${2:?Empty api data!}"
-}
+# api_post(){
+#     curl -u "$username:$token" "${APIHost}${1:?Empty api path!}" -o/dev/null -d "${2:?Empty api data!}"
+# }
 
 api_code(){
     curl -u "$username:$token" -kqsw '%{http_code}' "${APIHost}${1:?Empty api path!}" -o/dev/null
@@ -57,6 +57,8 @@ fi
 if [[ "$(api_code /repos/wsmhz/wsmhz-config-repository)" != "200" ]]; then
     echo "Bad credentials, 401"
     exit 1
+else
+    echo "success oauth github"
 fi
 
 ############################ 开始创建项目 #############################
@@ -88,10 +90,12 @@ if [[ "$(api_code /repos/${groupName}/${projectName})" == "200" ]]; then
     echo "${RemoteHost} remote origin already exist project ${projectName}!!"
     exit 0
 fi
-if [[ ! -d ${projectName} ]] ;then
-    echo "创建项目目录" ${projectName}
-    mkdir ${projectName}
+if [[ -d ${projectName} ]] ;then
+    echo "${projectName} already exist!!"
+    exit 0
 fi
+echo "创建项目目录" ${projectName}
+mkdir ${projectName}
 cd ${projectName}
 
 # 创建项目文件
@@ -110,35 +114,41 @@ done
 
 replacePackageName() {
     local file=${1:?No File  Space}
-    sed -i s/template/${artifactId//-/.}/g ${file}
-    sed -i s/micro.template/${groupId}.${artifactId//-/.}/g ${file}
+    sed -i s/com.template/${groupId}.${artifactId//-/.}/g ${file}
+    temp=${artifactId//-/}
+    sed -i s/template/${temp^}/g ${file}
 }
 
 # 创建主类和配置文件
 classFileName=${artifactId//-/}Application.java
 # 复制文件
 echo "复制Git忽略文件..."
-wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/.gitignore
+wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/.gitignore --no-check-certificate
 case ${type} in
     api)
-        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/api-pom.xml
-        mv api-pom.yml  pom.yml
+        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/api-pom.xml --no-check-certificate
+        mv api-pom.xml  pom.xml
         ;;
     micro)
-        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/micro-pom.xml
-        mv micro-pom.yml  pom.yml
+        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/micro-pom.xml --no-check-certificate
+        mv micro-pom.xml  pom.xml
 
-        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/templateApplication.java ./src/main/java/${packageDir}/${classFileName}
-        cp ../../src/main/resources/bootstrap.yml ./src/main/resources/
+        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/templateApplication.java --no-check-certificate
+        mv templateApplication.java ./src/main/java/${packageDir}/${classFileName}
+        wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/bootstrap.yml --no-check-certificate
+        mv bootstrap.yml ./src/main/resources
         replacePackageName ./src/main/java/${packageDir}/${classFileName}
         ;;
     *)
         ;;
 esac
+# 替换readme文件
+wget wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/README.md --no-check-certificate
+sed -i s/template/${artifactId}/g README.md
 #替换pom.xml文件内容
 echo "替换pom.xml文件内容..."
-sed -i s~\<\!--groupId--\>~\<groupId\>${groupId}\</groupId\>~g pom.xml
-sed -i s~\<\!--artifactId--\>~\<artifactId\>${artifactId}\</artifactId\>~g pom.xml
+sed -i s/template.groupId/${groupId}/g pom.xml
+sed -i s/template-artifactId/${artifactId}/g pom.xml
 
 echo "初始化本地Git仓库..."
 git init 2>&1 > /dev/null
@@ -147,12 +157,13 @@ git commit -q -m "Create & Init ${projectName} Project..." 2>&1 > /dev/null
 
 echo "初始化远程仓库..."
 # 创建项目
-api_post "/user/repos" "{\"name\":\"${projectName}\", \"private\":true}"
+curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${projectName}\", \"private\":false}"
+# api_post "/user/repos" "{\"name\":\"${projectName}\", \"private\":true}"
 
 # 推送项目
 echo "推送至远程仓库..."
 git remote add origin ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
-git push -u origin master -f 2>&1 > /dev/null
+git push origin master -f 2>&1 > /dev/null
 git push origin master:release -f 2>&1 > /dev/null
 git push origin master:dev -f 2>&1 > /dev/null
 
@@ -162,16 +173,19 @@ if [[ ! -d ".git" ]]; then
     git init 2>&1 > /dev/null
 fi
 if [[ -z "$(git remote -v)" ]]; then
-    api_post "/user/repos" "{\"name\":\"${parentRepoName}\", \"private\":true}"
+    curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${parentRepoName}\", \"private\":false}"
+    # api_post "/user/repos" "{\"name\":\"${parentRepoName}\", \"private\":true}"
     git remote add origin ${RemoteHost}/${groupName}/${parentRepoName}.git
+    wget wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/README.md --no-check-certificate
+    sed -i s/template/${parentRepoName}/g README.md
 fi
 if [[ -z "$(cat .git/config | grep submodule)" ]]; then
     git submodule init 2>&1 > /dev/null
 fi
 git submodule add ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
+git add . 2>&1 > /dev/null
 git commit -m "add submodule ${projectName}..."
-git push -u origin master
+git push origin master
 
-
-popd
 echo "组织 ${groupName} 项目 ${projectName} 创建完成!"
+popd

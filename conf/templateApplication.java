@@ -1,4 +1,4 @@
-package com.wsmhz.micro.template;
+package com.template;
 
 import org.springframework.boot.SpringApplication;
 
