@@ -133,7 +133,7 @@ case ${type} in
         mv micro-pom.xml  pom.xml
 
         wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/templateApplication.java --no-check-certificate
-        mv templateApplication.java ./src/main/java/${packageDir}/${classFileName}
+        mv templateApplication.java ./src/main/java/${packageDir}/${classFileName^}
         wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/bootstrap.yml --no-check-certificate
         mv bootstrap.yml ./src/main/resources
         replacePackageName ./src/main/java/${packageDir}/${classFileName}
