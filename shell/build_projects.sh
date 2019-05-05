@@ -14,9 +14,9 @@ groupName=wsmhz
 # 父仓库名称
 parentRepoName=wsmhz-shop
 # maven artifactId
-artifactId=order-service
+artifactId=product-service-api
 # 选项:micro api
-type=micro
+type=api
 
 
 ################################  以下请勿修改 #############################
@@ -62,27 +62,26 @@ else
 fi
 
 ############################ 开始创建项目 #############################
+
 # 检查父仓库是否存在
-if [[ "$(api_code /repos/${groupName}/${parentRepoName})" == "200" ]]; then
-    git clone ${RemoteHost}/${groupName}/${parentRepoName}.git ./
-    git submodule update --init
-    git submodule foreach git checkout master
-    git submodule foreach git pull origin master
-    echo "${RemoteHost} remote origin already exist project ${parentRepoName}!!"
-    exit 0
-else
-    if [[ ! -d ${parentRepoName} ]] ;then
+if [[ ! -d ${parentRepoName} ]] ;then
+    if [[ "$(api_code /repos/${groupName}/${parentRepoName})" == "200" ]]; then
+        git clone ${RemoteHost}/${groupName}/${parentRepoName}.git
+        git submodule update --init
+        git submodule foreach git checkout master
+        git submodule foreach git pull origin master
+        echo "${RemoteHost} remote origin already exist project ${parentRepoName}!!"
+    else
         echo "创建父仓库"
-        mkdir ${parentRepoName}
+        mkdir ${parentRepoName} 
     fi
-    cd ${parentRepoName}
 fi
+cd ${parentRepoName}
 
 # 项目目录创建 分type
 projectName=${artifactId}
 baseDir='api config constant controller enums domain domain/entity domain/form domain/vo service service/impl' #目录结构
 if [[ "${type}" == "api" ]]; then
-    projectName="${projectName}-api"
     baseDir='api config constant enums domain domain/form'
 fi
 # 检查项目仓库是否存在
@@ -150,42 +149,42 @@ echo "替换pom.xml文件内容..."
 sed -i s/template.groupId/${groupId}/g pom.xml
 sed -i s/template-artifactId/${artifactId}/g pom.xml
 
-echo "初始化本地Git仓库..."
-git init 2>&1 > /dev/null
-git add . 2>&1 > /dev/null
-git commit -q -m "Create & Init ${projectName} Project..." 2>&1 > /dev/null
+# echo "初始化本地Git仓库..."
+# git init 2>&1 > /dev/null
+# git add . 2>&1 > /dev/null
+# git commit -q -m "Create & Init ${projectName} Project..." 2>&1 > /dev/null
 
-echo "初始化远程仓库..."
-# 创建项目
-curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${projectName}\", \"private\":false}"
-# api_post "/user/repos" "{\"name\":\"${projectName}\", \"private\":true}"
+# echo "初始化远程仓库..."
+# # 创建项目
+# curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${projectName}\", \"private\":false}"
+# # api_post "/user/repos" "{\"name\":\"${projectName}\", \"private\":true}"
 
-# 推送项目
-echo "推送至远程仓库..."
-git remote add origin ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
-git push origin master -f 2>&1 > /dev/null
-git push origin master:release -f 2>&1 > /dev/null
-git push origin master:dev -f 2>&1 > /dev/null
+# # 推送项目
+# echo "推送至远程仓库..."
+# git remote add origin ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
+# git push origin master -f 2>&1 > /dev/null
+# git push origin master:release -f 2>&1 > /dev/null
+# git push origin master:dev -f 2>&1 > /dev/null
 
-echo "新增子项目到父模块..."
-cd ../
-if [[ ! -d ".git" ]]; then
-    git init 2>&1 > /dev/null
-fi
-if [[ -z "$(git remote -v)" ]]; then
-    curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${parentRepoName}\", \"private\":false}"
-    # api_post "/user/repos" "{\"name\":\"${parentRepoName}\", \"private\":true}"
-    git remote add origin ${RemoteHost}/${groupName}/${parentRepoName}.git
-    wget wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/README.md --no-check-certificate
-    sed -i s/template/${parentRepoName}/g README.md
-fi
-if [[ -z "$(cat .git/config | grep submodule)" ]]; then
-    git submodule init 2>&1 > /dev/null
-fi
-git submodule add ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
-git add . 2>&1 > /dev/null
-git commit -m "add submodule ${projectName}..."
-git push origin master
+# echo "新增子项目到父模块..."
+# cd ../
+# if [[ ! -d ".git" ]]; then
+#     git init 2>&1 > /dev/null
+# fi
+# if [[ -z "$(git remote -v)" ]]; then
+#     curl -u "$username:$token" ${APIHost}/user/repos -d "{\"name\":\"${parentRepoName}\", \"private\":false}"
+#     # api_post "/user/repos" "{\"name\":\"${parentRepoName}\", \"private\":true}"
+#     git remote add origin ${RemoteHost}/${groupName}/${parentRepoName}.git
+#     wget wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/conf/README.md --no-check-certificate
+#     sed -i s/template/${parentRepoName}/g README.md
+# fi
+# if [[ -z "$(cat .git/config | grep submodule)" ]]; then
+#     git submodule init 2>&1 > /dev/null
+# fi
+# git submodule add ${RemoteHost}/${groupName}/${projectName}.git 2>&1 > /dev/null
+# git add . 2>&1 > /dev/null
+# git commit -m "add submodule ${projectName}..."
+# git push origin master
 
 echo "组织 ${groupName} 项目 ${projectName} 创建完成!"
 popd
