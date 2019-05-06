@@ -15,6 +15,7 @@
         <artifactId>micro-service-api-parent</artifactId>
         <groupId>com.wsmhz.common</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
 

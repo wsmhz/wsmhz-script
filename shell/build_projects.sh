@@ -80,9 +80,9 @@ cd ${parentRepoName}
 
 # 项目目录创建 分type
 projectName=${artifactId}
-baseDir='api config constant controller enums domain domain/entity domain/form domain/vo service service/impl' #目录结构
+baseDir='config constant controller enums domain domain/entity domain/form domain/vo service service/impl' #目录结构
 if [[ "${type}" == "api" ]]; then
-    baseDir='api config constant enums domain domain/form'
+    baseDir='api config constant enums domain domain/form domain/vo'
 fi
 # 检查项目仓库是否存在
 if [[ "$(api_code /repos/${groupName}/${projectName})" == "200" ]]; then
