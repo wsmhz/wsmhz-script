@@ -1,5 +1,5 @@
 ## 删除带有<none>的镜像
-id=`docker images|grep eureka|awk '{print $3}'`
+id=`docker images|grep none|awk '{print $3}'`
 if [ "$id" != "" ]; then
   echo "删除<none>镜像"
   docker rmi $id
