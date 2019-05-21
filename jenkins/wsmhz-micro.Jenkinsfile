@@ -22,6 +22,7 @@ node() {
     def SENDER = jsonBuilder("$payload.sender.login" )
     def PUSHER = jsonBuilder("$payload.pusher.name" )
     def COMPARE_URL = jsonBuilder("$payload.compare" )
+    def buildImage = "${REPOSITORY_NAME}".endsWith("-service");
     stage('更新代码') {
         def scm 
         retry(3) {
@@ -43,29 +44,39 @@ node() {
        sh "'mvn' clean -Dmaven.test.skip=true install"
     }
     stage('构建镜像') {
-        try {
-            sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/shell/docker_rmi_none.sh | bash"
-        }
-        catch(e) {
-            sh "echo 删除带<none>的旧镜像失败，可能是该镜像正在被使用"
-        }
-        sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
-        sh "echo '输出生成的Dockerfile' && cat Dockerfile"
-        def result = sh returnStdout: true ,script: "docker images docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
-        try {
-            if ("${result}") {
-                sh "echo 删除旧镜像"
-                sh "docker rmi --force ${result}"
-                sh "echo 删除旧镜像成功"
+        if(buildImage){
+            try {
+                sh "wget -qO- https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/shell/docker_rmi_none.sh | bash"
             }
+            catch(e) {
+                sh "echo 删除带<none>的旧镜像失败，可能是该镜像正在被使用"
+            }
+            sh "wget https://raw.githubusercontent.com/wsmhz/wsmhz-script/master/build/Dockerfile"
+            sh "echo '输出生成的Dockerfile' && cat Dockerfile"
+            def result = sh returnStdout: true ,script: "docker images docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} | awk 'NR==2{print\$3}'"
+            try {
+                if ("${result}") {
+                    sh "echo 删除旧镜像"
+                    sh "docker rmi --force ${result}"
+                    sh "echo 删除旧镜像成功"
+                }
+            }
+            catch(e){
+                sh "echo 删除旧镜像失败，可能是该镜像正在被使用"
+            }
+            sh "docker build -t docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
+        } 
+        else{
+           echo "api项目跳过镜像构建过程"
         }
-        catch(e){
-            sh "echo 删除旧镜像失败，可能是该镜像正在被使用"
-        }
-        sh "docker build -t docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH} --build-arg PROJECT_NAME=${REPOSITORY_NAME} ."
     }
     stage('推送镜像') {
-        sh "docker push docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH}"
+        if(buildImage){
+            sh "docker push docker.wsmhz.cn/${REPOSITORY_NAME}:${BUILD_BRANCH}"
+        }
+        else{
+           echo "api项目跳过推送镜像过程"
+        }
     }
     stage('清理工作空间') {
       cleanWs()
