@@ -9,4 +9,4 @@ ADD target/${PROJECT_NAME}.jar /root
 
 WORKDIR /root
 
-CMD java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -XX:-OmitStackTraceInFastThrow -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2G -jar ${PROJECT_NAME}.jar
+CMD java -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -XX:-OmitStackTraceInFastThrow -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2G -jar ${PROJECT_NAME}.jar
