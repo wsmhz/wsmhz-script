@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# d16264bf0c250ca9bed1f6e4e4b22a4dcfcc215e
 # https://api.github.com/repos/  仓库api
 # https://api.github.com/orgs
 # curl -u "$username:$token" https://api.github.com/user/repos -d '{"name":"'$repo_name'"}' > /dev/null 2>&1   
