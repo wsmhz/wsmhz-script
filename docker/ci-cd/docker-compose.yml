@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  # 数据库
+  mysql:
+    image: mysql:5.7
+    environment:
+      # 数据库 `123456` 账户的密码
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+    volumes:
+      - /data/volumes/mysql:/var/lib/mysql
+  # Gogs代码托管服务
+  gogs:
+    image: gogs/gogs
+    ports:
+      - 3000:3000
+    volumes:
+      - /data/volumes/gogs:/data
+  # Jenkins构建工具
+  jenkins:
+    image: jenkins/jenkins:lts-alpine
+    ports:
+      - 8090:8080
+    volumes:
+      - /data/volumes/jenkins:/var/jenkins_home
